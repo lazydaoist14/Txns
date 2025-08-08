@@ -3,34 +3,8 @@
 <head>
 <title>Transaction Entry</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; background: #f7f7f7; padding: 20px; }
-  h2 { text-align: center; }
-  form { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-  label { font-weight: bold; display: block; margin-top: 10px; }
-  input, select, button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  button {
-    background: #28a745;
-    color: white;
-    font-size: 16px;
-    margin-top: 15px;
-    cursor: pointer;
-    border: none;
-  }
-  button:hover {
-    background: #218838;
-  }
-  #status {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
-  }
+  body { font-family: Arial; max-width: 500px; margin: auto; }
+  input, select, button { width: 100%; padding: 8px; margin: 5px 0; }
 </style>
 </head>
 <body>
@@ -69,22 +43,24 @@
 <script>
 document.getElementById("transactionForm").addEventListener("submit", function(e) {
   e.preventDefault();
-  
+
   const form = this;
   const type = form.type.value;
   let debitValue = "";
   let creditValue = "";
-  
+
   if (type === "Debit") {
     debitValue = form.amount.value;
   } else if (type === "Credit") {
     creditValue = form.amount.value;
   }
 
-  document.getElementById("status").innerText = "Saving transaction...";
-
   fetch("https://script.google.com/macros/s/AKfycbyADfOVtFrYyaRPZelhL_BA9sH6OfvHLm_lbvZUUnZkjGxpwl9mAvKuj7d-AHsMNPJD-A/exec", {
     method: "POST",
+    mode: "cors", // explicitly request CORS
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       sheetName: form.sheetName.value,
       date: form.date.value,
@@ -93,22 +69,22 @@ document.getElementById("transactionForm").addEventListener("submit", function(e
       credit: creditValue,
       amount: form.amount.value,
       remarks: form.remarks.value || ""
-    }),
-    headers: { "Content-Type": "application/json" }
+    })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
   .then(data => {
     if (data.status === "success") {
-      document.getElementById("status").style.color = "green";
       document.getElementById("status").innerText = "✅ Transaction Saved!";
       form.reset();
     } else {
-      throw new Error("Save failed");
+      document.getElementById("status").innerText = "❌ Error: " + (data.message || "Unknown error");
     }
   })
   .catch(err => {
-    document.getElementById("status").style.color = "red";
-    document.getElementById("status").innerText = "❌ Error saving transaction.";
+    document.getElementById("status").innerText = "❌ Error saving transaction: " + err;
   });
 });
 </script>
