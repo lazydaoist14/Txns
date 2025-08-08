@@ -23,11 +23,12 @@
   <label>Particulars</label>
   <input type="text" name="particulars" required>
 
-  <label>Debit</label>
-  <input type="number" step="0.01" name="debit">
-
-  <label>Credit</label>
-  <input type="number" step="0.01" name="credit">
+  <label>Type</label>
+  <select name="type" required>
+    <option value="">-- Select Type --</option>
+    <option value="Debit">Debit</option>
+    <option value="Credit">Credit</option>
+  </select>
 
   <label>Amount</label>
   <input type="number" step="0.01" name="amount" required>
@@ -43,14 +44,24 @@
 document.getElementById("transactionForm").addEventListener("submit", function(e) {
   e.preventDefault();
   
+  const type = this.type.value;
+  let debitValue = "";
+  let creditValue = "";
+  
+  if (type === "Debit") {
+    debitValue = this.amount.value;
+  } else if (type === "Credit") {
+    creditValue = this.amount.value;
+  }
+
   fetch("https://script.google.com/macros/s/AKfycbzgIye3hWs6TS6jEOM9s20aEk6ChAdjsxBeZFmhkH8dweu2sLLPTQvMYC5stfABzCkzWQ/exec", {
     method: "POST",
     body: JSON.stringify({
       sheetName: this.sheetName.value,
       date: this.date.value,
       particulars: this.particulars.value,
-      debit: this.debit.value || "",
-      credit: this.credit.value || "",
+      debit: debitValue,
+      credit: creditValue,
       amount: this.amount.value,
       remarks: this.remarks.value || ""
     }),
