@@ -1,19 +1,40 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>Transaction Entry</title>
 <style>
-  body { font-family: Arial; max-width: 400px; margin: auto; }
-  input, button { width: 100%; padding: 8px; margin: 5px 0; }
+  body { font-family: Arial; max-width: 500px; margin: auto; }
+  input, select, button { width: 100%; padding: 8px; margin: 5px 0; }
 </style>
 </head>
 <body>
 <h2>Enter Transaction</h2>
 <form id="transactionForm">
+  <label>Account</label>
+  <select name="sheetName" required>
+    <option value="">-- Select Account --</option>
+    <option value="Kotak SRG">Kotak SRG</option>
+    <option value="UBI SRG">UBI SRG</option>
+  </select>
+
+  <label>Date</label>
   <input type="date" name="date" required>
-  <input type="text" name="description" placeholder="Description" required>
-  <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+
+  <label>Particulars</label>
+  <input type="text" name="particulars" required>
+
+  <label>Debit</label>
+  <input type="number" step="0.01" name="debit">
+
+  <label>Credit</label>
+  <input type="number" step="0.01" name="credit">
+
+  <label>Amount</label>
+  <input type="number" step="0.01" name="amount" required>
+
+  <label>Remarks</label>
+  <input type="text" name="remarks">
+
   <button type="submit">Submit</button>
 </form>
 <p id="status"></p>
@@ -22,12 +43,16 @@
 document.getElementById("transactionForm").addEventListener("submit", function(e) {
   e.preventDefault();
   
-  fetch("https://script.google.com/macros/s/AKfycbzgIye3hWs6TS6jEOM9s20aEk6ChAdjsxBeZFmhkH8dweu2sLLPTQvMYC5stfABzCkzWQ/exec", {
+  fetch("YOUR_WEB_APP_URL", {
     method: "POST",
     body: JSON.stringify({
+      sheetName: this.sheetName.value,
       date: this.date.value,
-      description: this.description.value,
-      amount: this.amount.value
+      particulars: this.particulars.value,
+      debit: this.debit.value || "",
+      credit: this.credit.value || "",
+      amount: this.amount.value,
+      remarks: this.remarks.value || ""
     }),
     headers: { "Content-Type": "application/json" }
   }).then(res => res.json())
@@ -41,4 +66,3 @@ document.getElementById("transactionForm").addEventListener("submit", function(e
 </script>
 </body>
 </html>
-
