@@ -43,7 +43,7 @@
 document.getElementById("transactionForm").addEventListener("submit", function(e) {
   e.preventDefault();
   
-  fetch("YOUR_WEB_APP_URL", {
+  fetch("https://script.google.com/macros/s/AKfycbzgIye3hWs6TS6jEOM9s20aEk6ChAdjsxBeZFmhkH8dweu2sLLPTQvMYC5stfABzCkzWQ/exec", {
     method: "POST",
     body: JSON.stringify({
       sheetName: this.sheetName.value,
