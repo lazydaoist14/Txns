@@ -67,12 +67,16 @@ document.getElementById("transactionForm").addEventListener("submit", function(e
     }),
     headers: { "Content-Type": "application/json" }
   }).then(res => res.json())
-    .then(data => {
+  .then(data => {
+    if (data.status === "success") {
       document.getElementById("status").innerText = "Transaction Saved!";
       this.reset();
-    }).catch(err => {
-      document.getElementById("status").innerText = "Error saving transaction.";
-    });
+    } else {
+      document.getElementById("status").innerText = "Error: " + JSON.stringify(data);
+    }
+  }).catch(err => {
+    document.getElementById("status").innerText = "Error: " + err;
+  });
 });
 </script>
 </body>
