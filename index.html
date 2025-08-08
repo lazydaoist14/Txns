@@ -83,7 +83,7 @@ document.getElementById("transactionForm").addEventListener("submit", function(e
 
   document.getElementById("status").innerText = "Saving transaction...";
 
-  fetch("https://script.google.com/macros/s/AKfycbzIJFpP-bIgaZ4h2BfumOIQul758czEQL_91DowkQic3wQx7MzwtDQ6W0B-bPkVUa1YNA/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyADfOVtFrYyaRPZelhL_BA9sH6OfvHLm_lbvZUUnZkjGxpwl9mAvKuj7d-AHsMNPJD-A/exec", {
     method: "POST",
     body: JSON.stringify({
       sheetName: form.sheetName.value,
